@@ -83,11 +83,8 @@ function klik(index) {
 
 function opslaanResultaat(w) {
   const duur = Math.round((Date.now() - startTijd.value) / 1000)
-  let uitkomst
-  if (!w) uitkomst = 'gelijkspel'
-  else if (w === 'X') uitkomst = props.modus === 'vs-ai' ? 'gewonnen' : 'gewonnen'
-  else uitkomst = props.modus === 'vs-ai' ? 'verloren' : 'verloren'
-  game.saveResult(props.modus, uitkomst, duur)
+  const uitkomst = !w ? 'gelijkspel' : w === 'X' ? 'gewonnen' : 'verloren'
+  game.saveResult(props.modus, uitkomst, duur).catch(() => {})
 }
 
 function opnieuw() {
@@ -99,10 +96,11 @@ function opnieuw() {
 }
 
 const statusTekst = computed(() => {
-  if (winnaar.value) return `${winnaar.value} wint! 🎉`
+  if (winnaar.value === 'X') return props.modus === 'vs-ai' ? 'Jij wint! 🎉' : 'X wint! 🎉'
+  if (winnaar.value === 'O') return props.modus === 'vs-ai' ? 'Computer wint! 🤖' : 'O wint! 🎉'
   if (gelijkspel.value) return 'Gelijkspel! 🤝'
   if (props.modus === 'vs-ai' && huidigeTurn.value === 'O') return 'Computer denkt...'
-  return `Beurt van ${huidigeTurn.value}`
+  return props.modus === 'vs-ai' ? 'Jouw beurt (X)' : `Beurt van ${huidigeTurn.value}`
 })
 </script>
 

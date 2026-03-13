@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+const API = import.meta.env.VITE_API_URL || '/api'
 const gebruikers = ref([])
 const fout = ref('')
 

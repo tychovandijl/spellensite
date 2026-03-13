@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import axios from 'axios'
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
+const API = import.meta.env.VITE_API_URL || '/api'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(JSON.parse(localStorage.getItem('user') || 'null'))
