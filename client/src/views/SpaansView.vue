@@ -32,6 +32,12 @@ const categorieën = {
     { es: 'no', nl: 'nee' }, { es: 'buenos días', nl: 'goedemorgen' }, { es: 'buenas noches', nl: 'goedenacht' },
     { es: '¿cómo estás?', nl: 'hoe gaat het?' }, { es: 'me llamo', nl: 'ik heet' }, { es: 'no entiendo', nl: 'ik begrijp het niet' },
   ],
+  'Sporten & Spelen': [
+    { es: 'nadar', nl: 'zwemmen' }, { es: 'correr', nl: 'rennen' }, { es: 'jugar', nl: 'spelen' },
+    { es: 'saltar', nl: 'springen' }, { es: 'lanzar', nl: 'gooien' }, { es: 'patinar', nl: 'schaatsen' },
+    { es: 'montar en bici', nl: 'fietsen' }, { es: 'escalar', nl: 'klimmen' }, { es: 'ganar', nl: 'winnen' },
+    { es: 'perder', nl: 'verliezen' }, { es: 'la pelota', nl: 'de bal' }, { es: 'el equipo', nl: 'het team' },
+  ],
 }
 
 const geselecteerdeCat = ref(null)
@@ -65,9 +71,15 @@ function kiesCat(cat) {
 
 function maakOpties() {
   const juist = huidigeKaart.value.nl
-  const alleTrans = Object.values(categorieën).flat().map(k => k.nl)
-  const fout = shuffle(alleTrans.filter(t => t !== juist)).slice(0, 3)
-  opties.value = shuffle([juist, ...fout])
+  const catWoorden = categorieën[geselecteerdeCat.value].map(k => k.nl)
+  const andereCatWoorden = Object.entries(categorieën)
+    .filter(([cat]) => cat !== geselecteerdeCat.value)
+    .flatMap(([, woorden]) => woorden.map(k => k.nl))
+  const foutPool = shuffle([
+    ...catWoorden.filter(t => t !== juist),
+    ...andereCatWoorden.filter(t => t !== juist),
+  ])
+  opties.value = shuffle([juist, ...foutPool.slice(0, 3)])
 }
 
 function kiesAntwoord(optie) {
