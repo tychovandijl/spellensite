@@ -27,7 +27,7 @@ router.post('/register', async (req, res) => {
     const user = await User.create({ email, password })
     res.status(201).json({ token: signToken(user._id), user })
   } catch (err) {
-    res.status(500).json({ message: 'Registratie mislukt', error: err.message })
+    res.status(500).json({ message: 'Registratie mislukt' })
   }
 })
 
@@ -47,7 +47,7 @@ router.post('/login', async (req, res) => {
     }
     res.json({ token: signToken(user._id), user })
   } catch (err) {
-    res.status(500).json({ message: 'Inloggen mislukt', error: err.message })
+    res.status(500).json({ message: 'Inloggen mislukt' })
   }
 })
 
@@ -74,7 +74,7 @@ router.put('/password', requireAuth, async (req, res) => {
     await user.save()
     res.json({ message: 'Wachtwoord gewijzigd' })
   } catch (err) {
-    res.status(500).json({ message: 'Wijzigen mislukt', error: err.message })
+    res.status(500).json({ message: 'Wijzigen mislukt' })
   }
 })
 

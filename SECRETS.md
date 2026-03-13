@@ -6,7 +6,7 @@ Voeg deze secrets toe in je GitHub repository onder:
 | Secret naam                        | Waarde                                  |
 |------------------------------------|------------------------------------------|
 | `AZURE_WEBAPP_PUBLISH_PROFILE`     | (zie hieronder)                         |
-| `AZURE_STATIC_WEB_APPS_API_TOKEN`  | `cd684938cb9cd1f9478a8ea5f70fa6964ed1660fa7070a3ca28e2dd8db9b3cb102-332231fe-aa5e-4c6c-93a2-2e8da9cab023003273204a6fa103` |
+| `AZURE_STATIC_WEB_APPS_API_TOKEN`  | (zie Azure Portal → Static Web Apps → jouw app → Manage deployment token) |
 
 ## AZURE_WEBAPP_PUBLISH_PROFILE ophalen
 

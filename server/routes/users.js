@@ -14,7 +14,7 @@ router.get('/', async (_req, res) => {
     const users = await User.find()
     res.json({ users })
   } catch (err) {
-    res.status(500).json({ message: 'Laden mislukt', error: err.message })
+    res.status(500).json({ message: 'Laden mislukt' })
   }
 })
 
@@ -42,7 +42,7 @@ router.put('/:id/password', async (req, res) => {
     await user.save()
     res.json({ message: 'Wachtwoord gewijzigd' })
   } catch (err) {
-    res.status(500).json({ message: 'Wijzigen mislukt', error: err.message })
+    res.status(500).json({ message: 'Wijzigen mislukt' })
   }
 })
 
