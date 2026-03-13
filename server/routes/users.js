@@ -11,7 +11,7 @@ router.use(requireAuth, requireAdmin)
 // GET /api/users — alle gebruikers
 router.get('/', async (_req, res) => {
   try {
-    const users = await User.find().sort({ createdAt: -1 })
+    const users = await User.find()
     res.json({ users })
   } catch (err) {
     res.status(500).json({ message: 'Laden mislukt', error: err.message })
