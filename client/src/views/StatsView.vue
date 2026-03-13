@@ -26,7 +26,7 @@ onMounted(() => {
       <tbody>
         <tr v-for="r in game.history" :key="r._id">
           <td>{{ new Date(r.createdAt).toLocaleDateString('nl-NL') }}</td>
-          <td>{{ r.modus }}</td>
+          <td>{{ { 'vs-ai-makkelijk': '🤖 Makkelijk', 'vs-ai-moeilijk': '🧠 Moeilijk', 'vs-ai': '🤖 Computer', 'vs-speler': '👥 Twee spelers' }[r.modus] ?? r.modus }}</td>
           <td>{{ r.uitkomst }}</td>
         </tr>
       </tbody>
