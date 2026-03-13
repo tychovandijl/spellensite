@@ -1,9 +1,11 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { useGameStore } from '../stores/game'
 
 const props = defineProps({ modus: String })
 const game = useGameStore()
+
+const isVsAi = computed(() => props.modus === 'vs-ai-makkelijk' || props.modus === 'vs-ai-moeilijk')
 
 const bord = ref(Array(9).fill(null))
 const huidigeTurn = ref('X') // X = menselijke speler altijd
@@ -41,6 +43,11 @@ function minimax(b, isMaximizerAanZet) {
   return isMaximizerAanZet ? Math.max(...scores) : Math.min(...scores)
 }
 
+function aiWilleukeurigeZet(b) {
+  const leeg = b.map((cel, i) => cel ? null : i).filter(i => i !== null)
+  return leeg[Math.floor(Math.random() * leeg.length)]
+}
+
 function aiBestZet(b) {
   let bestScore = -Infinity
   let bestIndex = -1
@@ -55,9 +62,13 @@ function aiBestZet(b) {
   return bestIndex
 }
 
+function aiZet(b) {
+  return props.modus === 'vs-ai-makkelijk' ? aiWilleukeurigeZet(b) : aiBestZet(b)
+}
+
 function klik(index) {
   if (bord.value[index] || winnaar.value || gelijkspel.value) return
-  if (props.modus === 'vs-ai' && huidigeTurn.value !== 'X') return
+  if (isVsAi.value && huidigeTurn.value !== 'X') return
 
   bord.value[index] = huidigeTurn.value
 
@@ -67,10 +78,10 @@ function klik(index) {
 
   huidigeTurn.value = huidigeTurn.value === 'X' ? 'O' : 'X'
 
-  if (props.modus === 'vs-ai' && huidigeTurn.value === 'O') {
+  if (isVsAi.value && huidigeTurn.value === 'O') {
     setTimeout(() => {
-      const ai = aiBestZet(bord.value)
-      if (ai !== -1) {
+      const ai = aiZet(bord.value)
+      if (ai !== undefined && ai !== -1) {
         bord.value[ai] = 'O'
         const w2 = controleerWinnaar(bord.value)
         if (w2) { winnaar.value = w2; opslaanResultaat(w2); return }
@@ -96,11 +107,11 @@ function opnieuw() {
 }
 
 const statusTekst = computed(() => {
-  if (winnaar.value === 'X') return props.modus === 'vs-ai' ? 'Jij wint! 🎉' : 'X wint! 🎉'
-  if (winnaar.value === 'O') return props.modus === 'vs-ai' ? 'Computer wint! 🤖' : 'O wint! 🎉'
+  if (winnaar.value === 'X') return isVsAi.value ? 'Jij wint! 🎉' : 'X wint! 🎉'
+  if (winnaar.value === 'O') return isVsAi.value ? 'Computer wint! 🤖' : 'O wint! 🎉'
   if (gelijkspel.value) return 'Gelijkspel! 🤝'
-  if (props.modus === 'vs-ai' && huidigeTurn.value === 'O') return 'Computer denkt...'
-  return props.modus === 'vs-ai' ? 'Jouw beurt (X)' : `Beurt van ${huidigeTurn.value}`
+  if (isVsAi.value && huidigeTurn.value === 'O') return 'Computer denkt...'
+  return isVsAi.value ? 'Jouw beurt (X)' : `Beurt van ${huidigeTurn.value}`
 })
 </script>
 
