@@ -56,4 +56,26 @@ router.get('/me', requireAuth, (req, res) => {
   res.json({ user: req.user })
 })
 
+// PUT /api/auth/password
+router.put('/password', requireAuth, async (req, res) => {
+  const { huidig, nieuw: nieuwWachtwoord } = req.body
+  if (!huidig || !nieuwWachtwoord) {
+    return res.status(400).json({ message: 'Huidig en nieuw wachtwoord zijn verplicht' })
+  }
+  if (nieuwWachtwoord.length < 6) {
+    return res.status(400).json({ message: 'Nieuw wachtwoord moet minimaal 6 tekens zijn' })
+  }
+  try {
+    const user = await User.findById(req.user._id)
+    if (!(await user.checkPassword(huidig))) {
+      return res.status(401).json({ message: 'Huidig wachtwoord is onjuist' })
+    }
+    user.password = nieuwWachtwoord
+    await user.save()
+    res.json({ message: 'Wachtwoord gewijzigd' })
+  } catch (err) {
+    res.status(500).json({ message: 'Wijzigen mislukt', error: err.message })
+  }
+})
+
 export default router

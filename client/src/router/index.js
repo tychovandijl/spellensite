@@ -8,6 +8,7 @@ const routes = [
   { path: '/spel', component: () => import('../views/GameView.vue'), meta: { requiresAuth: true } },
   { path: '/statistieken', component: () => import('../views/StatsView.vue'), meta: { requiresAuth: true } },
   { path: '/admin', component: () => import('../views/AdminView.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
+  { path: '/wachtwoord', component: () => import('../views/WachtwoordView.vue'), meta: { requiresAuth: true } },
 ]
 
 const router = createRouter({

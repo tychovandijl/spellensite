@@ -20,6 +20,7 @@ function logout() {
       <RouterLink v-if="auth.isAdmin" to="/admin">Admin</RouterLink>
       <template v-if="auth.isLoggedIn">
         <span class="email">{{ auth.user?.email }}</span>
+        <RouterLink to="/wachtwoord">Wachtwoord</RouterLink>
         <button @click="logout">Uitloggen</button>
       </template>
       <template v-else>
