@@ -15,7 +15,8 @@ function logout() {
   <nav class="navbar">
     <RouterLink class="logo" to="/">🎮 Spellensite</RouterLink>
     <div class="links">
-      <RouterLink to="/spel">Spelen</RouterLink>
+      <RouterLink to="/spel">Boter Kaas Eieren</RouterLink>
+      <RouterLink v-if="auth.isLoggedIn" to="/spaans">Spaans</RouterLink>
       <RouterLink v-if="auth.isLoggedIn" to="/statistieken">Statistieken</RouterLink>
       <RouterLink v-if="auth.isAdmin" to="/admin">Admin</RouterLink>
       <template v-if="auth.isLoggedIn">
