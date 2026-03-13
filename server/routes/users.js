@@ -10,8 +10,12 @@ router.use(requireAuth, requireAdmin)
 
 // GET /api/users — alle gebruikers
 router.get('/', async (_req, res) => {
-  const users = await User.find().sort({ createdAt: -1 })
-  res.json({ users })
+  try {
+    const users = await User.find().sort({ createdAt: -1 })
+    res.json({ users })
+  } catch (err) {
+    res.status(500).json({ message: 'Laden mislukt', error: err.message })
+  }
 })
 
 // PUT /api/users/:id/role — rol wijzigen
@@ -23,6 +27,23 @@ router.put('/:id/role', async (req, res) => {
   const user = await User.findByIdAndUpdate(req.params.id, { role }, { new: true })
   if (!user) return res.status(404).json({ message: 'Gebruiker niet gevonden' })
   res.json({ user })
+})
+
+// PUT /api/users/:id/password — wachtwoord resetten door admin
+router.put('/:id/password', async (req, res) => {
+  const { password } = req.body
+  if (!password || password.length < 6) {
+    return res.status(400).json({ message: 'Wachtwoord moet minimaal 6 tekens zijn' })
+  }
+  try {
+    const user = await User.findById(req.params.id)
+    if (!user) return res.status(404).json({ message: 'Gebruiker niet gevonden' })
+    user.password = password
+    await user.save()
+    res.json({ message: 'Wachtwoord gewijzigd' })
+  } catch (err) {
+    res.status(500).json({ message: 'Wijzigen mislukt', error: err.message })
+  }
 })
 
 // POST /api/users/:id/block — blokkeren / deblokkeren
@@ -51,15 +72,6 @@ router.delete('/:id', async (req, res) => {
   await User.findByIdAndDelete(req.params.id)
   await GameResult.deleteMany({ speler: req.params.id })
   res.json({ message: 'Gebruiker verwijderd' })
-})
-
-// GET /api/admin/stats — totale activiteit
-router.get('/admin/stats', async (_req, res) => {
-  const [totalUsers, totalGames] = await Promise.all([
-    User.countDocuments(),
-    GameResult.countDocuments(),
-  ])
-  res.json({ totalUsers, totalGames })
 })
 
 export default router

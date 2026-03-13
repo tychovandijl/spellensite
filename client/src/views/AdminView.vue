@@ -5,10 +5,19 @@ import axios from 'axios'
 const API = import.meta.env.VITE_API_URL || '/api'
 const gebruikers = ref([])
 const fout = ref('')
+const wachtwoordVeld = ref({})
+const wachtwoordFout = ref({})
+const wachtwoordSucces = ref({})
 
 async function laadGebruikers() {
-  const { data } = await axios.get(`${API}/users`)
-  gebruikers.value = data.users
+  fout.value = ''
+  try {
+    const { data } = await axios.get(`${API}/users`)
+    gebruikers.value = data.users
+    wachtwoordVeld.value = {}
+  } catch (err) {
+    fout.value = err.response?.data?.message || 'Laden mislukt. Probeer opnieuw in te loggen.'
+  }
 }
 
 async function wijzigRol(id, rol) {
@@ -33,6 +42,23 @@ async function verwijder(id) {
   await laadGebruikers()
 }
 
+async function wijzigWachtwoord(id) {
+  wachtwoordFout.value[id] = ''
+  wachtwoordSucces.value[id] = ''
+  const pw = wachtwoordVeld.value[id]
+  if (!pw || pw.length < 6) {
+    wachtwoordFout.value[id] = 'Minimaal 6 tekens'
+    return
+  }
+  try {
+    await axios.put(`${API}/users/${id}/password`, { password: pw })
+    wachtwoordSucces.value[id] = 'Gewijzigd!'
+    wachtwoordVeld.value[id] = ''
+  } catch (err) {
+    wachtwoordFout.value[id] = err.response?.data?.message || 'Mislukt'
+  }
+}
+
 onMounted(laadGebruikers)
 </script>
 
@@ -40,10 +66,10 @@ onMounted(laadGebruikers)
   <div class="admin-pagina">
     <h2>Admin — Gebruikersbeheer</h2>
     <p v-if="fout" class="fout">{{ fout }}</p>
-    <table>
+    <table v-if="gebruikers.length">
       <thead>
         <tr>
-          <th>Email</th><th>Rol</th><th>Status</th><th>W/V/G</th><th>Acties</th>
+          <th>Email</th><th>Rol</th><th>Status</th><th>W/V/G</th><th>Wachtwoord</th><th>Acties</th>
         </tr>
       </thead>
       <tbody>
@@ -56,7 +82,20 @@ onMounted(laadGebruikers)
             </select>
           </td>
           <td>{{ u.geblokkeerd ? '🔒 Geblokkeerd' : '✅ Actief' }}</td>
-          <td>{{ u.stats.gewonnen }}/{{ u.stats.verloren }}/{{ u.stats.gelijkspel }}</td>
+          <td>{{ u.stats?.gewonnen ?? 0 }}/{{ u.stats?.verloren ?? 0 }}/{{ u.stats?.gelijkspel ?? 0 }}</td>
+          <td>
+            <div style="display:flex;gap:0.3rem;align-items:center;">
+              <input
+                v-model="wachtwoordVeld[u._id]"
+                type="password"
+                placeholder="Nieuw wachtwoord"
+                style="padding:0.2rem 0.4rem;border:1px solid #c7d2fe;border-radius:6px;font-size:0.8rem;width:130px;"
+              />
+              <button @click="wijzigWachtwoord(u._id)">Sla op</button>
+            </div>
+            <small v-if="wachtwoordFout[u._id]" style="color:#991b1b;display:block;">{{ wachtwoordFout[u._id] }}</small>
+            <small v-if="wachtwoordSucces[u._id]" style="color:#065f46;display:block;">{{ wachtwoordSucces[u._id] }}</small>
+          </td>
           <td class="acties">
             <button @click="blokkeer(u._id)">{{ u.geblokkeerd ? 'Deblokkeren' : 'Blokkeren' }}</button>
             <button @click="resetScore(u._id)">Score reset</button>
@@ -65,5 +104,6 @@ onMounted(laadGebruikers)
         </tr>
       </tbody>
     </table>
+    <p v-else-if="!fout">Geen gebruikers gevonden.</p>
   </div>
 </template>
