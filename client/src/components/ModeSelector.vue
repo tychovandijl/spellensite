@@ -9,6 +9,9 @@ const emit = defineEmits(['kies'])
       <button class="modus-knop" @click="emit('kies', 'vs-ai-makkelijk')">
         🤖 Computer<br><small>Makkelijk</small>
       </button>
+      <button class="modus-knop" @click="emit('kies', 'vs-ai-gemiddeld')">
+        🤖 Computer<br><small>Gemiddeld</small>
+      </button>
       <button class="modus-knop" @click="emit('kies', 'vs-ai-moeilijk')">
         🧠 Computer<br><small>Moeilijk</small>
       </button>

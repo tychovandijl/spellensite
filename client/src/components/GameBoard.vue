@@ -5,7 +5,7 @@ import { useGameStore } from '../stores/game'
 const props = defineProps({ modus: String })
 const game = useGameStore()
 
-const isVsAi = computed(() => props.modus === 'vs-ai-makkelijk' || props.modus === 'vs-ai-moeilijk')
+const isVsAi = computed(() => props.modus === 'vs-ai-makkelijk' || props.modus === 'vs-ai-gemiddeld' || props.modus === 'vs-ai-moeilijk')
 
 const bord = ref(Array(9).fill(null))
 const huidigeTurn = ref('X') // X = menselijke speler altijd
@@ -63,7 +63,9 @@ function aiBestZet(b) {
 }
 
 function aiZet(b) {
-  return props.modus === 'vs-ai-makkelijk' ? aiWilleukeurigeZet(b) : aiBestZet(b)
+  if (props.modus === 'vs-ai-makkelijk') return aiWilleukeurigeZet(b)
+  if (props.modus === 'vs-ai-gemiddeld') return Math.random() < 0.5 ? aiBestZet(b) : aiWilleukeurigeZet(b)
+  return aiBestZet(b)
 }
 
 function klik(index) {
