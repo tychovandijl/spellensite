@@ -10,6 +10,7 @@ const routes = [
   { path: '/admin', component: () => import('../views/AdminView.vue'), meta: { requiresAuth: true, requiresAdmin: true } },
   { path: '/wachtwoord', component: () => import('../views/WachtwoordView.vue'), meta: { requiresAuth: true } },
   { path: '/spaans', component: () => import('../views/SpaansView.vue'), meta: { requiresAuth: true } },
+  { path: '/galgje', component: () => import('../views/GalgjeView.vue'), meta: { requiresAuth: true } },
 ]
 
 const router = createRouter({

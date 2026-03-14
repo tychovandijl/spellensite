@@ -17,6 +17,11 @@ const auth = useAuthStore()
         <strong>Spaans leren</strong>
         <small>Oefen woorden met flitskaarten</small>
       </RouterLink>
+      <RouterLink to="/galgje" class="spel-kaart">
+        <span class="spel-icon">🪢</span>
+        <strong>Galgje</strong>
+        <small>Raad het woord letter voor letter</small>
+      </RouterLink>
     </div>
     <RouterLink v-else to="/register" class="btn-primary">Maak een account aan</RouterLink>
   </div>
