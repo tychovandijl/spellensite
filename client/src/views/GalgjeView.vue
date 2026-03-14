@@ -151,9 +151,14 @@ function terugNaarMenu() {
 <style scoped>
 .galgje-container {
   max-width: 540px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
   font-family: inherit;
+  background: rgba(255, 255, 255, 0.93);
+  border-radius: 20px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+  position: relative;
+  z-index: 1;
 }
 
 /* MENU */

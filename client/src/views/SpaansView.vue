@@ -206,8 +206,13 @@ const scoreKleur = computed(() => {
 <style scoped>
 .spaans-pagina {
   max-width: 560px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  background: rgba(255, 255, 255, 0.93);
+  border-radius: 20px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+  position: relative;
+  z-index: 1;
 }
 
 h2 { text-align: center; margin-bottom: 0.5rem; }
